@@ -1,5 +1,4 @@
 import pygame
-import time
 import matplotlib.pyplot as plt
 
 from classes.pid import PID
@@ -17,7 +16,7 @@ screen = pygame.display.set_mode((1280, 720))
 display = Display(debug=True)
 graph = Graph()
 
-rocket = Rocket(screen.get_width() // 2, 5000)
+rocket = Rocket(screen.get_width() // 2, 1000)
 pid = PID(1, 0.001, 200)
 
 desired_altitude = 200

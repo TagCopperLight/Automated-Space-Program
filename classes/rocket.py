@@ -20,7 +20,7 @@ class Rocket:
         self.total_mass = self.rocket_mass + self.fuel_mass
 
     def update(self, delta_t):
-        #self.drag = Vector2() if self.velocity == Vector2() else -self.velocity.normalize() * (1/2 * 1.2 * self.velocity.magnitude_squared() * 0.47 * 0.01) / 2
+        self.drag = Vector2() if self.velocity == Vector2() else -self.velocity.normalize() * (1/2 * 1.2 * self.velocity.magnitude_squared() * 0.47 * 0.01) / 2
         self.check_fuel()
         self.total_mass = self.rocket_mass + self.fuel_mass * self.fuel
         self.acceleration = Vector2()
