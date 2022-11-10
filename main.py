@@ -22,7 +22,6 @@ pid = PID(1, 0.001, 200)
 desired_altitude = 200
 
 enable_pid = False
-started = False
 
 running = True
 while running:
@@ -40,19 +39,18 @@ while running:
                 rocket.thrust += 0.1
             if event.key == pygame.K_SPACE:
                 enable_pid = not enable_pid
-            if event.key == pygame.K_r:
-                started = True
 
     screen.fill(Colors.SKY.value)
 
     if enable_pid:
         rocket.set_thrust(pid.update(desired_altitude - rocket.position.y) / 100)
 
-    if started:
-        rocket.update(clock.get_time() / 16 / 60)
+    rocket.update(clock.get_time() / 16 / 60)
     if rocket.position.y <= 75:
         rocket.position.y = 75
         rocket.velocity = pygame.Vector2()
+        graph.print_time()
+
     screen.blit(display.update(screen.get_size(), rocket, desired_altitude), (0, 0))
     graph.update(rocket, desired_altitude)
 

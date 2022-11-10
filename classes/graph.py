@@ -1,6 +1,6 @@
 from time import time_ns
 import matplotlib.pyplot as plt
-
+from utils.utils import get_time
 
 class Graph:
     def __init__(self):
@@ -12,16 +12,16 @@ class Graph:
         self.x_accel, self.y_accel = [], []
 
     def update(self, rocket, desired_altitude):
-        self.x_pos.append(time_ns() - self.START_TIME)
+        self.x_pos.append(get_time(self.START_TIME))
         self.y_pos.append(rocket.position.y)
 
-        self.x_desired.append(time_ns() - self.START_TIME)
+        self.x_desired.append(get_time(self.START_TIME))
         self.y_desired.append(desired_altitude)
 
-        self.x_thrust.append(time_ns() - self.START_TIME)
+        self.x_thrust.append(get_time(self.START_TIME))
         self.y_thrust.append(rocket.thrust * 100)
 
-        self.x_accel.append(time_ns() - self.START_TIME)
+        self.x_accel.append(get_time(self.START_TIME))
         self.y_accel.append(rocket.velocity.y)
 
     def show(self):
@@ -31,3 +31,6 @@ class Graph:
         plt.plot(self.x_accel, self.y_accel, 'yellow')
 
         plt.show()
+    
+    def print_time(self):
+        print(get_time(self.START_TIME))
