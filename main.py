@@ -7,8 +7,7 @@ from classes.colors import Colors
 from classes.display import Display
 from classes.graph import Graph
 
-from utils.utils import Clock, get_time
-from utils.physics import get_temperature, graph_temperature
+from utils.utils import Clock
 
 pygame.init()
 pygame.font.init()
@@ -25,7 +24,7 @@ pid = PID(1, 0.001, 200)
 desired_altitude = 200
 
 enable_pid = False
-running = False
+running = True
 
 clock = Clock(FPS)
 
@@ -62,8 +61,5 @@ while running:
     pygame.display.update()
 
     clock.sleep()
-
-print(get_temperature(50000))
-graph_temperature()
 
 #graph.show()

@@ -8,11 +8,13 @@ def convert_position(position, screen_size):
 def get_time(start_time=0):
     return (time_ns() - start_time) / 1_000_000_000
 
+
 def _sleep(duration):
     now = perf_counter()
     end = now + duration
     while now < end:
         now = perf_counter()
+
 
 class Clock:
     def __init__(self, fps):
