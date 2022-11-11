@@ -1,4 +1,5 @@
 from pygame import transform, image, Vector2
+from utils.utils import Clock
 
 
 class Rocket:
@@ -12,6 +13,8 @@ class Rocket:
         self.max_thrust = Vector2(0, 20)
         self.drag = Vector2(0, 0)
 
+        self.clock = Clock(60)
+
         self.thrust = 0
         self.fuel = 1
 
@@ -20,7 +23,9 @@ class Rocket:
         self.total_mass = self.rocket_mass + self.fuel_mass
 
     def update(self, delta_t):
-        self.drag = Vector2() if self.velocity == Vector2() else -self.velocity.normalize() * (1/2 * 1.2 * self.velocity.magnitude_squared() * 0.47 * 0.01) / 2
+        delta_t = self.clock.tick() / 1_000_000_000
+
+        self.drag = Vector2() if self.velocity == Vector2() else -self.velocity.normalize() * (1/2 * 1.2 * self.velocity.magnitude_squared() * 0.47 * 9)
         self.check_fuel()
         self.total_mass = self.rocket_mass + self.fuel_mass * self.fuel
         self.acceleration = Vector2()
@@ -32,7 +37,7 @@ class Rocket:
 
         self.position += self.velocity * delta_t
 
-        #self.fuel -= 0.0005 * self.thrust
+        self.fuel -= 0.0005 * self.thrust
 
     def check_fuel(self):
         if self.fuel <= 0:

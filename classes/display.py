@@ -14,7 +14,7 @@ class Display:
 
         if self.debug:
             thrust_text = self.FONT.render(f'{rocket.thrust * 100:.3f}', False, Colors.WHITE.value)
-            altitude_text = self.FONT.render(f'{desired_altitude}' + "  " + f'{rocket.position.y}', False, Colors.WHITE.value)
+            altitude_text = self.FONT.render(f'{rocket.velocity.y:.3f}' + "  " + f'{rocket.position.y:.3f}', False, Colors.WHITE.value)
             fuel_text = self.FONT.render(f'{rocket.fuel * 100:.3f}', False, Colors.WHITE.value)
             surface.blit(thrust_text, (10, 10))
             surface.blit(altitude_text, (10, 40))
