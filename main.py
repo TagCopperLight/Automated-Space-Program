@@ -1,5 +1,4 @@
 import pygame
-import matplotlib.pyplot as plt
 
 from classes.pid import PID
 from classes.rocket import Rocket
@@ -7,7 +6,7 @@ from classes.colors import Colors
 from classes.display import Display
 from classes.graph import Graph
 
-from utils.utils import Clock
+from utils.utils import Clock, get_time
 
 pygame.init()
 pygame.font.init()
@@ -18,13 +17,14 @@ graph = Graph()
 
 FPS = 60
 
-rocket = Rocket(screen.get_width() // 2, 10000)
+rocket = Rocket(screen.get_width() // 2, 20000)
 pid = PID(1, 0.001, 200)
 
 desired_altitude = 200
 
 enable_pid = False
 running = True
+printed = False
 
 clock = Clock(FPS)
 
@@ -33,14 +33,10 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                desired_altitude += 25
-            if event.key == pygame.K_DOWN:
-                desired_altitude -= 25
             if event.key == pygame.K_s:
-                rocket.thrust -= 0.1
+                rocket.set_thrust(rocket.thrust - 1)
             if event.key == pygame.K_z:
-                rocket.thrust += 0.1
+                rocket.set_thrust(rocket.thrust + 1)
             if event.key == pygame.K_SPACE:
                 enable_pid = not enable_pid
 
@@ -49,7 +45,7 @@ while running:
     if enable_pid:
         rocket.set_thrust(pid.update(desired_altitude - rocket.position.y) / 100)
 
-    rocket.update(2)
+    rocket.update()
     
     if rocket.position.y <= 75:
         rocket.position.y = 75
@@ -62,4 +58,4 @@ while running:
 
     clock.sleep()
 
-#graph.show()
+graph.show()

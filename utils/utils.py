@@ -35,4 +35,4 @@ class Clock:
         delta_t = now - self.start_time
         self.start_time = now
 
-        return delta_t 
+        return delta_t

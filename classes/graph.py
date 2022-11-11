@@ -28,6 +28,6 @@ class Graph:
         plt.plot(self.x_pos, self.y_pos, 'red')
         plt.plot(self.x_vel, self.y_vel, 'orange')
         plt.plot(self.x_accel, self.y_accel, 'yellow')
-        #plt.plot(self.x_thrust, self.y_thrust, 'green')
+        plt.plot(self.x_thrust, self.y_thrust, 'green')
 
         plt.show()
