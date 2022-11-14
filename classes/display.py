@@ -13,12 +13,16 @@ class Display:
         surface = Surface(screen_size, SRCALPHA)
 
         if self.debug:
-            thrust_text = self.FONT.render(f'{rocket.thrust * 100:.3f}', False, Colors.WHITE.value)
-            altitude_text = self.FONT.render(f'{rocket.velocity.y:.3f}' + "  " + f'{rocket.position.y:.3f}', False, Colors.WHITE.value)
-            fuel_text = self.FONT.render(f'{rocket.fuel * 100:.3f}', False, Colors.WHITE.value)
-            surface.blit(thrust_text, (10, 10))
-            surface.blit(altitude_text, (10, 40))
-            surface.blit(fuel_text, (10, 70))
+            velocity_text = self.FONT.render(f'Velocity : {rocket.velocity.y:.3f} m/s', False, Colors.WHITE.value)
+            position_text = self.FONT.render(f'Altitude : {rocket.position.y:.3f} m', False, Colors.WHITE.value)
+            term_vel_text = self.FONT.render(f'Terminal velocity : {rocket.term_velocity:.3f} m/s', False, Colors.WHITE.value)
+            thrust_text = self.FONT.render(f'Thrust : {rocket.thrust * 100:.3f} %', False, Colors.WHITE.value)
+            fuel_text = self.FONT.render(f'Fuel : {rocket.fuel * 100:.3f} %', False, Colors.WHITE.value)
+            surface.blit(velocity_text, (10, 10))
+            surface.blit(position_text, (10, 40))
+            surface.blit(term_vel_text, (10, 70))
+            surface.blit(thrust_text, (10, 100))
+            surface.blit(fuel_text, (10, 130))
         
         ground = Rect(*convert_position((0, 75), screen_size), screen_size[0], 150)
         draw.rect(surface, Colors.GROUND.value, ground)

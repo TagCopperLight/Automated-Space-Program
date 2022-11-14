@@ -17,7 +17,7 @@ graph = Graph()
 
 FPS = 60
 
-rocket = Rocket(screen.get_width() // 2, 20000)
+rocket = Rocket(screen.get_width() // 2, 75)
 pid = PID(1, 0.001, 200)
 
 desired_altitude = 200
@@ -34,16 +34,16 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_s:
-                rocket.set_thrust(rocket.thrust - 1)
+                rocket.set_thrust(rocket.thrust - .1)
             if event.key == pygame.K_z:
-                rocket.set_thrust(rocket.thrust + 1)
+                rocket.set_thrust(rocket.thrust + .1)
             if event.key == pygame.K_SPACE:
                 enable_pid = not enable_pid
 
     screen.fill(Colors.SKY.value)
 
     if enable_pid:
-        rocket.set_thrust(pid.update(desired_altitude - rocket.position.y) / 100)
+        rocket.set_thrust(-pid.update(desired_altitude - rocket.position.y) / 100)
 
     rocket.update()
     
