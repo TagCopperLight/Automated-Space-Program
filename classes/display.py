@@ -1,6 +1,6 @@
 from pygame import font, Surface, Rect, draw, SRCALPHA, Vector2
 
-from classes.colors import Colors
+from utils.colors import Colors
 from utils.utils import convert_position
 
 
@@ -17,12 +17,14 @@ class Display:
             position_text = self.FONT.render(f'Altitude : {rocket.position.y:.3f} m', False, Colors.WHITE.value)
             term_vel_text = self.FONT.render(f'Terminal velocity : {rocket.term_velocity:.3f} m/s', False, Colors.WHITE.value)
             thrust_text = self.FONT.render(f'Thrust : {rocket.thrust * 100:.3f} %', False, Colors.WHITE.value)
-            fuel_text = self.FONT.render(f'Fuel : {rocket.fuel * 100:.3f} %', False, Colors.WHITE.value)
+            fuel_text = self.FONT.render(f'Fuel : {rocket.fuel / rocket.fuel_mass * 100:.3f} %', False, Colors.WHITE.value)
+            mass_text = self.FONT.render(f'Mass : {rocket.mass} kg', False, Colors.WHITE.value)
             surface.blit(velocity_text, (10, 10))
             surface.blit(position_text, (10, 40))
             surface.blit(term_vel_text, (10, 70))
             surface.blit(thrust_text, (10, 100))
             surface.blit(fuel_text, (10, 130))
+            surface.blit(mass_text, (10, 160))
         
         ground = Rect(*convert_position((0, 75), screen_size), screen_size[0], 150)
         draw.rect(surface, Colors.GROUND.value, ground)
