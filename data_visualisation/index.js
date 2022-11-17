@@ -27,6 +27,7 @@ net_server.on('error', function() {
 });
 
 app.set('view engine', 'ejs');
+app.use(express.static(__dirname + '/public'));
 
 app.get('/home', (req, res) => {
     res.render('home');
