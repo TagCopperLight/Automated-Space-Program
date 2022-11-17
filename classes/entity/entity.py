@@ -8,4 +8,6 @@ class Entity:
         self.velocity = Vector2()
         self.acceleration = Vector2()
 
+        self.rotation = Vector2(0, 1).normalize()
+
         self.mass = 0

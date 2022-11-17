@@ -1,6 +1,8 @@
 from pygame import transform, image, Vector2
 from math import sqrt
 
+from classes.entity.entity import Entity
+
 from utils.utils import Clock
 from utils.physics import get_temperature, get_density, get_gravity_acceleration
 from utils.constants import Constants
@@ -10,7 +12,7 @@ class Rocket(Entity):
     def __init__(self):
         super().__init__()
 
-        self.rocket = transform.scale(image.load('ratio.png').convert_alpha(), (9, 70))
+        self.rocket = transform.scale(image.load('data/ratio.png').convert_alpha(), (9, 70))
 
         self.max_thrust = Vector2(0, 7600000)
         self.drag = Vector2(0, 0)
@@ -22,6 +24,8 @@ class Rocket(Entity):
         self.fuel_mass = 480000
         self.fuel = self.fuel_mass
         self.mass = self.rocket_mass + self.fuel_mass
+
+        self.position.x = 640
 
     def update(self):
         dt = self.clock.tick() / 1_000_000_000
