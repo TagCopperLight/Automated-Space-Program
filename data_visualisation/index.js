@@ -1,3 +1,4 @@
+const { json } = require('express');
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
@@ -8,11 +9,21 @@ var net_server = net.createServer();
 
 net_server.listen(4000, '127.0.0.1');
 
+var global_data = {type: 'void'};
+
 net_server.on('connection', function(socket) {
-    console.log('Connected: ' + socket.remoteAddress + ':' + socket.remotePort);
+    console.log('Client connected');
     socket.on('data', function(data) {
-        console.log('Received: ' + data);
+        //convert the ArrayBuffer to json
+        global_data = JSON.parse(data);
     });
+    socket.on('close', function() {
+        global_data = {type: 'void'}
+    });
+});
+
+net_server.on('error', function() {
+    console.log('Connection closed');
 });
 
 app.set('view engine', 'ejs');
@@ -26,6 +37,6 @@ server.listen(3001);
 io.on('connection', (socket) => {
     socket.emit('message', {type: 'init'});
     socket.on('message', (message) => {
-        socket.emit('message', message);
+        socket.emit('message', global_data);
     });
 });

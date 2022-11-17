@@ -22,13 +22,14 @@ class Client:
         self._logger = Logger()
 
         self._entities = [Rocket()]
+        self.rocket = Rocket()
 
         self._fps = fps
         self.clock = Clock(self._fps)
 
     def run(self):
         while self._run:
-            self._screen.blit(self.tick())
+            self._screen.blit(self.tick(), (0, 0))
 
             pygame.display.update()
 
@@ -38,25 +39,23 @@ class Client:
                 self._run = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s:
-                    rocket.set_thrust(rocket.thrust - 1)
+                    self.rocket.set_thrust(self.rocket.thrust - 1)
                 if event.key == pygame.K_z:
-                    rocket.set_thrust(rocket.thrust + 1)
-                if event.key == pygame.K_SPACE:
-                    enable_pid = not enable_pid
+                    self.rocket.set_thrust(self.rocket.thrust + 1)
+                # if event.key == pygame.K_SPACE:
+                #     enable_pid = not enable_pid
 
         self._screen.fill(Colors.SKY.value)
 
-        if enable_pid:
-            rocket.rotation.rotate_ip(0.5)
+        # if enable_pid:
+        #     self.rocket.rotation.rotate_ip(0.5)
 
-        rocket.update()
+        self.rocket.update()
 
-        if rocket.position.y <= 75:
-            rocket.position.y = 75
-            rocket.velocity = pygame.Vector2()
+        if self.rocket.position.y <= 75:
+            self.rocket.position.y = 75
+            self.rocket.velocity = pygame.Vector2()
+        
+        self._logger.send_data_tcp(self.rocket)
 
-        graph.update(rocket)
-        graph.send_data(rocket)
-
-
-        return self._display.update(self._screen.get_size(), rocket, desired_altitude, (0, 0))
+        return self._display.update(self._screen.get_size(), self.rocket)

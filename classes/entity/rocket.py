@@ -12,6 +12,8 @@ class Rocket(Entity):
     def __init__(self):
         super().__init__()
 
+        self.name = "Rocket"
+        
         self.rocket = transform.scale(image.load('data/ratio.png').convert_alpha(), (9, 70))
 
         self.max_thrust = Vector2(0, 7600000)

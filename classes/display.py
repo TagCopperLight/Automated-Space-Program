@@ -9,7 +9,7 @@ class Display:
         self.debug = debug
         self.FONT = font.SysFont('Comic Sans MS', 30)
 
-    def update(self, screen_size, rocket, desired_altitude):
+    def update(self, screen_size, rocket):
         surface = Surface(screen_size, SRCALPHA)
 
         if self.debug:

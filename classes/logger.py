@@ -9,11 +9,11 @@ import json
 class Logger:
     def __init__(self):
         self.START_TIME = time_ns()
-    
-    def send_data_udp(self, rocket):
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.connect(('127.0.0.1', 4000))
 
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect(('127.0.0.1', 4000))
+    
+    def send_data_tcp(self, rocket):
         data = {
             "type": "data",
             "data": {
@@ -36,9 +36,7 @@ class Logger:
             }
         }
 
-        sock.sendall(json.dumps(data).encode('utf-8'))
-
-        sock.close()
+        self.sock.sendall(json.dumps(data).encode('utf-8'))
 
     def database_init(self):
         self.db = mysql.connector.connect(
