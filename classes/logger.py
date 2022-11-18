@@ -18,11 +18,11 @@ class Logger:
             "type": "data",
             "data": {
                 "altitude": {
-                    "time": get_time(self.START_TIME),
+                    "time": round(get_time(self.START_TIME), 2),
                     "altitude": rocket.position.y
                 },
                 "velocity": {
-                    "time": get_time(self.START_TIME),
+                    "time": round(get_time(self.START_TIME), 2),
                     "velocity": rocket.velocity.y
                 },
                 "trust": {
