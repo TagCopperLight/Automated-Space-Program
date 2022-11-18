@@ -44,7 +44,10 @@
                                 color: "#181825"
                             },
                             ticks: {
-                                color : "#cdd6f4"
+                                color : "#cdd6f4",
+                                callback: (xValue) => {
+                                    return Math.floor(xValue);
+                                },
                             }
                         }
                     },
@@ -63,7 +66,7 @@
                     datasets: [{
                         label: 'Velocity',
                         pointRadius: 0,
-                        borderColor: '#f9e3af',
+                        borderColor: '#b4befe',
                         borderWidth: 2,
                         data: []
                     }]
@@ -83,7 +86,10 @@
                                 color: "#181825"
                             },
                             ticks: {
-                                color : "#cdd6f4"
+                                color : "#cdd6f4",
+                                callback: (xValue) => {
+                                    return Math.floor(xValue);
+                                },
                             }
                         }
                     },
@@ -119,6 +125,11 @@
                     console.log('Connexion initialized.');
                 } else if(data.type == 'data'){
                     addData(altitude_chart, data.data.altitude.time, data.data.altitude.altitude);
+                    addData(velocity_chart, data.data.velocity.time, data.data.velocity.velocity)
+                } else if(data.type == 'reset'){
+                    resetData(altitude_chart);
+                    resetData(velocity_chart);
+                    socket.emit('message', {type: 'reseted'});
                 }
         
                 socket.emit('message', {type:'acknowledge'});

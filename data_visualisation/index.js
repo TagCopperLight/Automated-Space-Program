@@ -13,8 +13,8 @@ var global_data = {type: 'void'};
 
 net_server.on('connection', function(socket) {
     console.log('Client connected');
+    global_data = {type: 'reset'};
     socket.on('data', function(data) {
-        //convert the ArrayBuffer to json
         global_data = JSON.parse(data);
     });
     socket.on('close', function() {
@@ -38,6 +38,9 @@ server.listen(3001);
 io.on('connection', (socket) => {
     socket.emit('message', {type: 'init'});
     socket.on('message', (message) => {
+        if(message.type == 'reseted'){
+            global_data = {type: 'void'};
+        }
         socket.emit('message', global_data);
     });
 });
