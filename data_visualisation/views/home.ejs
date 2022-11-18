@@ -13,43 +13,20 @@
             <div class="chart"><canvas id="velocity_chart" style="width: 100%; height: 100%;"></canvas></div>
         </div>
         <script>
-            var socket = io();
-
-            socket.on('message', function(data) {
-                if(data.type == 'init'){
-                    console.log('Connexion initialized.');
-                } else if(data.type == 'data'){
-                }
-
-                socket.emit('message', {type:'acknowledge'});
-            });
-
+            
             const altitude_ctx = document.getElementById('altitude_chart');
             const velocity_ctx = document.getElementById('velocity_chart');
-
-            new Chart(altitude_ctx, {
+            
+            var altitude_chart = new Chart(altitude_ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'a', 'b', 'c', 'd'],
+                    labels: [],
                     datasets: [{
                         label: 'Altitude',
                         pointRadius: 0,
                         borderColor: '#b4befe',
                         borderWidth: 2,
-                        data: [12, 19, 3, 5, 2, 3, 4, 5, 6, 7]
-                    }]
-                },
-            });
-            new Chart(velocity_ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                    datasets: [{
-                        label: 'Velocity',
-                        pointRadius: 0,
-                        borderColor: '#f9e3af',
-                        borderWidth: 2,
-                        data: [12, 19, 3, 5, 2, 3]
+                        data: []
                     }]
                 },
                 options: {
@@ -57,19 +34,95 @@
                         y: {
                             grid: {
                                 color: "#181825"
+                            },
+                            ticks: {
+                                color: "#cdd6f4"
                             }
                         },
                         x: {
                             grid: {
                                 color: "#181825"
                             },
-                            title: {
-                                color : "#181825"
+                            ticks: {
+                                color : "#cdd6f4"
                             }
+                        }
+                    },
+                    animation: false,
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     }
                 }
             });
-        </script>
+            var velocity_chart = new Chart(velocity_ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Velocity',
+                        pointRadius: 0,
+                        borderColor: '#f9e3af',
+                        borderWidth: 2,
+                        data: []
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            grid: {
+                                color: "#181825"
+                            },
+                            ticks: {
+                                color: "#cdd6f4"
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: "#181825"
+                            },
+                            ticks: {
+                                color : "#cdd6f4"
+                            }
+                        }
+                    },
+                    animation: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            function addData(chart, x, y) {
+                chart.data.labels.push(x);
+                chart.data.datasets.forEach((dataset) => {
+                    dataset.data.push(y);
+                });
+                chart.update('none');
+            };
+
+            function resetData(chart){
+                chart.data.labels = []
+                chart.data.datasets.forEach((dataset) => {
+                    dataset.data = []
+                });
+                chart.update('none');
+            }
+            
+            var socket = io();
+        
+            socket.on('message', function(data) {
+                if(data.type == 'init'){
+                    console.log('Connexion initialized.');
+                } else if(data.type == 'data'){
+                    addData(altitude_chart, data.data.altitude.time, data.data.altitude.altitude);
+                }
+        
+                socket.emit('message', {type:'acknowledge'});
+            });
+            </script>
     </body>
 </html>
