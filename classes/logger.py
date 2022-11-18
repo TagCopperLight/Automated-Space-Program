@@ -1,7 +1,6 @@
 from time import time_ns
 from utils.utils import get_time
 
-import mysql.connector
 import socket
 import json
 
@@ -12,10 +11,17 @@ class Logger:
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect(('127.0.0.1', 4000))
+        self.sock.sendall(json.dumps({"type": "reset"}).encode('utf-8'))
     
     def send_data_tcp(self, rocket):
         data = {
             "type": "data",
+            "data_type": [
+                "altitude",
+                "velocity",
+                "thrust",
+                "fuel"
+            ],
             "data": {
                 "altitude": {
                     "time": round(get_time(self.START_TIME), 2),
@@ -37,27 +43,3 @@ class Logger:
         }
 
         self.sock.sendall(json.dumps(data).encode('utf-8'))
-
-    def database_init(self):
-        self.db = mysql.connector.connect(
-            host = "localhost",
-            user = "tag",
-            password = "",
-            database = "RocketSimulator"
-        )
-
-        cursor = self.db.cursor()
-
-        sql = "TRUNCATE altitude"
-        cursor.execute(sql)
-        self.db.commit()
-    
-    def send_data(self, rocket):
-        cursor = self.db.cursor()
-
-        sql = "INSERT INTO altitude (t, altitude) VALUES (%s, %s)"
-        values = (get_time(self.START_TIME), rocket.position.y)
-
-        cursor.execute(sql, values)
-
-        self.db.commit()

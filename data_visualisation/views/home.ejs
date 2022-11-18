@@ -2,102 +2,16 @@
 <html>
     <head>
         <link rel="stylesheet" href="css/style.css">
+        <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 
-        <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+        <script src="https://unpkg.com/socket.io-client@4.5.3/dist/socket.io.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body>
         <div class="page">
-            <div class="chart"><canvas id="altitude_chart" style="width: 100%; height: 100%;"></canvas></div>
-            <div class="chart"><canvas id="velocity_chart" style="width: 100%; height: 100%;"></canvas></div>
         </div>
         <script>
-            
-            const altitude_ctx = document.getElementById('altitude_chart');
-            const velocity_ctx = document.getElementById('velocity_chart');
-            
-            var altitude_chart = new Chart(altitude_ctx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Altitude',
-                        pointRadius: 0,
-                        borderColor: '#b4befe',
-                        borderWidth: 2,
-                        data: []
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            grid: {
-                                color: "#181825"
-                            },
-                            ticks: {
-                                color: "#cdd6f4"
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: "#181825"
-                            },
-                            ticks: {
-                                color : "#cdd6f4",
-                                display: false
-                            }
-                        }
-                    },
-                    animation: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-            var velocity_chart = new Chart(velocity_ctx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Velocity',
-                        pointRadius: 0,
-                        borderColor: '#b4befe',
-                        borderWidth: 2,
-                        data: []
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            grid: {
-                                color: "#181825"
-                            },
-                            ticks: {
-                                color: "#cdd6f4"
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: "#181825"
-                            },
-                            ticks: {
-                                color : "#cdd6f4",
-                                display: false
-                            }
-                        }
-                    },
-                    animation: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-            
             function addData(chart, x, y) {
                 chart.data.labels.push(x);
                 chart.data.datasets.forEach((dataset) => {
@@ -113,23 +27,85 @@
                 });
                 chart.update('none');
             }
-            
+
             var socket = io();
-        
-            socket.on('message', function(data) {
-                if(data.type == 'init'){
-                    console.log('Connexion initialized.');
-                } else if(data.type == 'data'){
-                    addData(altitude_chart, data.data.altitude.time, data.data.altitude.altitude);
-                    addData(velocity_chart, data.data.velocity.time, data.data.velocity.velocity)
-                } else if(data.type == 'reset'){
+
+            var charts = [];
+            var inited = false;
+
+            socket.on('message', function(message) {
+                if (message.type == 'init'){
+                    if (message.data.length > 0){
+                        inited = true;
+
+                        message.data[0].data_type.forEach(data_type => {
+                            $('.page').append('<div class="chart"><canvas id="' + data_type + '_chart" style="width: 100%; height: 100%;"></canvas></div>');
+                        });
+
+                        //Push all data types and create charts from saved data
+                        message.data[0].data_type.forEach(data_type => {
+                            eval('var ' + data_type + `_chart = new Chart(document.getElementById('` + data_type + `_chart'), {
+                                type: 'line',
+                                data: {
+                                    labels: [],
+                                    datasets: [{
+                                        label: data_type.charAt(0).toUpperCase() + data_type.slice(1),
+                                        pointRadius: 0,
+                                            borderColor: '#b4befe',
+                                            borderWidth: 2,
+                                            data: []
+                                        }]
+                                    },
+                                    options: {
+                                        scales: {
+                                            y: {
+                                                grid: {
+                                                    color: "#181825"
+                                                },
+                                                ticks: {
+                                                    color: "#cdd6f4"
+                                                }
+                                            },
+                                            x: {
+                                                grid: {
+                                                    color: "#181825"
+                                                },
+                                                ticks: {
+                                                    color : "#cdd6f4",
+                                                    display: false
+                                                }
+                                            }
+                                        },
+                                        animation: false,
+                                        plugins: {
+                                            legend: {
+                                                display: false
+                                            }
+                                        }
+                                    }
+                            });`);
+                            charts.push([data_type, eval(data_type + '_chart')]);
+                        });
+
+                        //Push all saved data
+                        message.data.forEach(data => {
+                            charts.forEach(element => {
+                                eval('addData(element[1], data.data.' + element[0] + '.time, data.data.' + element[0] + '.' + element[0] + ');');
+                            });
+                        });
+                    };
+
+                } else if (message.type == 'data'){
+                    if (!inited){
+                    }
+                    
+                } else if(message.type == 'reset'){
                     resetData(altitude_chart);
                     resetData(velocity_chart);
-                    socket.emit('message', {type: 'reseted'});
                 }
-        
+
                 socket.emit('message', {type:'acknowledge'});
             });
-            </script>
+        </script>
     </body>
 </html>
