@@ -7,7 +7,7 @@ from utils.utils import convert_position
 class DisplayManager:
     def __init__(self, debug=False):
         self.debug = debug
-        self.FONT = font.SysFont('Comic Sans MS', 20)
+        self.FONT = font.Font('data/Roboto-Bold.ttf', 20)
 
     def update(self, screen_size, entities):
         surface = Surface(screen_size, SRCALPHA)

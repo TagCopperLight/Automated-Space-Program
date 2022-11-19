@@ -1,6 +1,6 @@
 import pygame
 
-from classes.entity.Rocket import Rocket
+from classes.entity.Old_Rocket import Rocket
 from classes.managers.DisplayManager import DisplayManager
 from classes.managers.EventManager import EventManager
 

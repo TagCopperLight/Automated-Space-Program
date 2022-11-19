@@ -11,9 +11,6 @@ class Event:
 
 
 class EventManager:
-    def __init__(self):
-        pass
-
     def update(self, events, client):
         returned_event = Event()
 
