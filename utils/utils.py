@@ -2,7 +2,7 @@ from time import time_ns, perf_counter
 
 
 def convert_position(rocket, screen_size, rotated_rocket):
-    return rocket.position.x, screen_size[1] - rocket.position.y
+    return screen_size[0] / 2 - rotated_rocket.get_width() / 2, screen_size[1] - rocket.rocket.get_height()/2 - rotated_rocket.get_height() / 2 - 60
 
 
 def get_time(start_time=0):

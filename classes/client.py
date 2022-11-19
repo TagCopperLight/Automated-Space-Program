@@ -1,10 +1,10 @@
 import pygame
 
-from classes.entity.rocket import Rocket
-from utils.colors import Colors
-from classes.display import Display
-from classes.logger import Logger
+from classes.entity.Rocket import Rocket
+from classes.managers.DisplayManager import DisplayManager
+from classes.managers.EventManager import EventManager
 
+from utils.logger import Logger
 from utils.utils import Clock
 
 
@@ -18,11 +18,11 @@ class Client:
 
         self._run = True
 
-        self._display = Display(debug=True)
+        self._displayManager = DisplayManager(debug=True)
+        self._eventManager = EventManager()
         self._logger = Logger()
 
         self._entities = [Rocket()]
-        self.rocket = Rocket()
 
         self._fps = fps
         self.clock = Clock(self._fps)
@@ -34,28 +34,13 @@ class Client:
             pygame.display.update()
 
     def tick(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self._run = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_s:
-                    self.rocket.set_thrust(self.rocket.thrust - 1)
-                if event.key == pygame.K_z:
-                    self.rocket.set_thrust(self.rocket.thrust + 1)
-                # if event.key == pygame.K_SPACE:
-                #     enable_pid = not enable_pid
+        events = self._eventManager.update(pygame.event.get(), self)
 
-        self._screen.fill(Colors.SKY.value)
-
-        # if enable_pid:
-        #     self.rocket.rotation.rotate_ip(0.5)
-
-        self.rocket.update()
-
-        if self.rocket.position.y <= 75:
-            self.rocket.position.y = 75
-            self.rocket.velocity = pygame.Vector2()
+        for entity in self._entities:
+            entity.update(events)
         
-        self._logger.send_data_tcp(self.rocket)
+        for entity in self._entities:
+            if entity.name == 'Rocket':
+                self._logger.send_data_tcp(entity)
 
-        return self._display.update(self._screen.get_size(), self.rocket)
+        return self._displayManager.update(self._screen.get_size(), self._entities)

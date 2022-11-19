@@ -1,7 +1,7 @@
-from pygame import transform, image, Vector2
-from math import sqrt
+from pygame import transform, image, Vector2, K_z, K_s, K_LEFT, K_RIGHT
+from math import sqrt, pi
 
-from classes.entity.entity import Entity
+from classes.entity.Entity import Entity
 
 from utils.utils import Clock
 from utils.physics import get_temperature, get_density, get_gravity_acceleration
@@ -14,7 +14,7 @@ class Rocket(Entity):
 
         self.name = "Rocket"
         
-        self.rocket = transform.scale(image.load('data/ratio.png').convert_alpha(), (9, 70))
+        self.rocket = transform.scale(image.load('data/ratio.png').convert_alpha(), (4, 65))
 
         self.max_thrust = Vector2(0, 7600000)
         self.drag = Vector2(0, 0)
@@ -27,10 +27,10 @@ class Rocket(Entity):
         self.fuel = self.fuel_mass
         self.mass = self.rocket_mass + self.fuel_mass
 
-        self.position.x = 640
-
-    def update(self):
+    def update(self, events):
         dt = self.clock.tick() / 1_000_000_000
+
+        self.player_update(events)
 
         self.update_physics()
 
@@ -47,6 +47,8 @@ class Rocket(Entity):
 
         self.position += self.velocity * dt
 
+        self.check_position()
+
         self.fuel -= 2500 * self.thrust * dt
 
         if self.density != 0:
@@ -61,6 +63,16 @@ class Rocket(Entity):
 
         self.mass = (self.rocket_mass + self.fuel) / sqrt(1 - (self.velocity.y / Constants.LIGHT_SPEED.value) ** 2)
 
+    def player_update(self, events):
+        for event in events.keys_down:
+            if event == K_z:
+                self.set_thrust(self.thrust + 0.1)
+            elif event == K_s:
+                self.set_thrust(self.thrust - 0.1)
+            elif event == K_LEFT:
+                self.rotation.rotate_ip_rad(-pi/10)
+            elif event == K_RIGHT:
+                self.rotation.rotate_ip_rad(pi/10)
 
     def check_fuel(self):
         if self.fuel <= 0:
@@ -70,6 +82,11 @@ class Rocket(Entity):
     def check_velocity(self):
         if self.velocity.y >= Constants.LIGHT_SPEED.value:
             self.velocity.y = Constants.LIGHT_SPEED.value - .000001
+    
+    def check_position(self):
+        if self.position.y <= 60:
+            self.position.y = 60
+            self.velocity = Vector2()
 
     def set_thrust(self, thrust):
         if thrust > 1:
