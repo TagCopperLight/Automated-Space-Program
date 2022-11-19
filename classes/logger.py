@@ -11,7 +11,7 @@ class Logger:
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect(('127.0.0.1', 4000))
-        self.sock.sendall(json.dumps({"type": "reset"}).encode('utf-8'))
+        self.sock.sendall((json.dumps({"type": "reset"}) + 'eof').encode('utf-8'))
     
     def send_data_tcp(self, rocket):
         data = {
@@ -19,27 +19,32 @@ class Logger:
             "data_type": [
                 "altitude",
                 "velocity",
-                "thrust",
-                "fuel"
+                "drag",
+                "term_velocity"
             ],
+            "colors": {
+                "altitude": "#b4befe",
+                "velocity": "#f9e2af",
+                "drag": "#fab387",
+                "term_velocity": "#f38ba8"
+            },
             "data": {
                 "altitude": {
-                    "time": round(get_time(self.START_TIME), 2),
+                    "time": get_time(self.START_TIME),
                     "altitude": rocket.position.y
                 },
                 "velocity": {
-                    "time": round(get_time(self.START_TIME), 2),
+                    "time": get_time(self.START_TIME),
                     "velocity": rocket.velocity.y
                 },
-                "trust": {
+                "drag": {
                     "time": get_time(self.START_TIME),
-                    "trust": rocket.thrust * 100
+                    "drag": rocket.drag.y
                 },
-                "fuel": {
+                "term_velocity": {
                     "time": get_time(self.START_TIME),
-                    "fuel": rocket.fuel / rocket.fuel_mass
+                    "term_velocity": rocket.term_velocity
                 }
             }
         }
-
-        self.sock.sendall(json.dumps(data).encode('utf-8'))
+        self.sock.sendall((json.dumps(data) + 'eof').encode('utf-8'))

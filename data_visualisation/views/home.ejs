@@ -3,6 +3,7 @@
     <head>
         <link rel="stylesheet" href="css/style.css">
         <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+        <title>Rocket Data</title>
 
         <script src="https://unpkg.com/socket.io-client@4.5.3/dist/socket.io.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -34,26 +35,29 @@
             var inited = false;
 
             socket.on('message', function(message) {
-                if (message.type == 'init'){
-                    if (message.data.length > 0){
-                        inited = true;
+                if (message.type == 'data'){
+                    if (message.data_list.length > 0){
+                        if (!inited){
+                            inited = true;
 
-                        message.data[0].data_type.forEach(data_type => {
-                            $('.page').append('<div class="chart"><canvas id="' + data_type + '_chart" style="width: 100%; height: 100%;"></canvas></div>');
-                        });
+                            //Create all canvas elements
+                            message.data_list[0].data_type.forEach(data_type => {
+                                $('.page').append('<div class="chart"><canvas id="' + data_type + '_chart" style="width: 100%; height: 100%;"></canvas></div>');
+                            });
 
-                        //Push all data types and create charts from saved data
-                        message.data[0].data_type.forEach(data_type => {
-                            eval('var ' + data_type + `_chart = new Chart(document.getElementById('` + data_type + `_chart'), {
-                                type: 'line',
-                                data: {
-                                    labels: [],
-                                    datasets: [{
-                                        label: data_type.charAt(0).toUpperCase() + data_type.slice(1),
-                                        pointRadius: 0,
-                                            borderColor: '#b4befe',
+                            //Push all data types and create charts from saved data
+                            message.data_list[0].data_type.forEach(data_type => {
+                                eval('var ' + data_type + `_chart = new Chart(document.getElementById('` + data_type + `_chart'), {
+                                    type: 'line',
+                                    data: {
+                                        labels: [],
+                                        datasets: [{
+                                            label: data_type.charAt(0).toUpperCase() + data_type.slice(1).replace('_', ' '),
+                                            pointRadius: 0,
+                                            borderColor: message.data_list[0].colors.` + data_type + `,
                                             borderWidth: 2,
-                                            data: []
+                                            data: [],
+                                            tension: 0.1
                                         }]
                                     },
                                     options: {
@@ -68,7 +72,8 @@
                                             },
                                             x: {
                                                 grid: {
-                                                    color: "#181825"
+                                                    color: "#181825",
+                                                    display: false
                                                 },
                                                 ticks: {
                                                     color : "#cdd6f4",
@@ -79,33 +84,46 @@
                                         animation: false,
                                         plugins: {
                                             legend: {
-                                                display: false
+                                                title: {
+                                                    display: true,
+                                                    text: data_type.charAt(0).toUpperCase() + data_type.slice(1).replace('_', ' '),
+                                                    color: message.data_list[0].colors.` + data_type + `
+                                                },
+                                                labels: {
+                                                    generateLabels: function(chart) {
+                                                        return [];
+                                                    }
+                                                }
                                             }
                                         }
                                     }
-                            });`);
-                            charts.push([data_type, eval(data_type + '_chart')]);
-                        });
-
-                        //Push all saved data
-                        message.data.forEach(data => {
-                            charts.forEach(element => {
-                                eval('addData(element[1], data.data.' + element[0] + '.time, data.data.' + element[0] + '.' + element[0] + ');');
+                                });`);
+                                charts.push([data_type, eval(data_type + '_chart')]);
                             });
-                        });
-                    };
 
-                } else if (message.type == 'data'){
-                    if (!inited){
+                            //Push all saved data
+                            message.data_list.forEach(data => {
+                                charts.forEach(element => {
+                                    eval('addData(element[1], data.data.' + element[0] + '.time, data.data.' + element[0] + '.' + element[0] + ');');
+                                });
+                            });
+                        } else {
+                            message.data_list.forEach(data => {
+                                charts.forEach(element => {
+                                    eval('addData(element[1], data.data.' + element[0] + '.time, data.data.' + element[0] + '.' + element[0] + ');');
+                                });
+                            }); 
+                        }
                     }
-                    
                 } else if(message.type == 'reset'){
-                    resetData(altitude_chart);
-                    resetData(velocity_chart);
+                    charts.forEach(element => {
+                            eval('resetData(element[1]);');
+                    });
                 }
 
-                socket.emit('message', {type:'acknowledge'});
+                socket.emit('message', {type: 'ack'});
             });
         </script>
     </body>
 </html>
+
