@@ -35,7 +35,6 @@ class DisplayManager:
     def draw_debug(self, surface, entity):
         surface.blit(self.FONT.render(f'Velocity : {entity.velocity.y:.3f} m/s', True, Colors.BLACK.value), (10, 10))
         surface.blit(self.FONT.render(f'Altitude : {entity.position.y:.3f} m', True, Colors.BLACK.value), (10, 40))
-        surface.blit(self.FONT.render(f'Terminal velocity : {entity.term_velocity:.3f} m/s', True, Colors.BLACK.value), (10, 70))
+        surface.blit(self.FONT.render(f'Terminal velocity : {entity.terminal_velocity:.3f} m/s', True, Colors.BLACK.value), (10, 70))
         surface.blit(self.FONT.render(f'Thrust : {entity.thrust * 100:.3f} %', True, Colors.BLACK.value), (10, 100))
         surface.blit(self.FONT.render(f'Fuel : {entity.fuel / entity.fuel_mass * 100:.3f} %', True, Colors.BLACK.value), (10, 130))
-        surface.blit(self.FONT.render(f'Mass : {entity.mass:.3f} kg', True, Colors.BLACK.value), (10, 160))

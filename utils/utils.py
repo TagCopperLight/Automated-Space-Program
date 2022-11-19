@@ -17,7 +17,7 @@ def _sleep(duration):
 
 
 class Clock:
-    def __init__(self, fps):
+    def __init__(self, fps=60):
         self.START_TIME = time_ns()
         self.start_time = time_ns()
         self.FPS = fps

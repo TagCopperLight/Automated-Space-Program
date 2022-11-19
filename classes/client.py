@@ -1,8 +1,12 @@
 import pygame
 
-from classes.entity.Old_Rocket import Rocket
+from classes.entity.Rocket import Rocket
 from classes.managers.DisplayManager import DisplayManager
 from classes.managers.EventManager import EventManager
+
+from classes.entity.parts.FuelTank import FuelTank
+from classes.entity.parts.Engine import Engine
+from classes.entity.parts.Fairing import Fairing
 
 from utils.logger import Logger
 from utils.utils import Clock
@@ -22,7 +26,7 @@ class Client:
         self._eventManager = EventManager()
         self._logger = Logger()
 
-        self._entities = [Rocket()]
+        self._entities = [Rocket([Engine(), FuelTank(), FuelTank(), FuelTank(), FuelTank(), Fairing()])]
 
         self._fps = fps
         self.clock = Clock(self._fps)

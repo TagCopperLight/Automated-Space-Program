@@ -19,14 +19,14 @@ class Logger:
             "data_type": [
                 "altitude",
                 "velocity",
-                "drag",
-                "term_velocity"
+                "acceleration",
+                "drag"
             ],
             "colors": {
                 "altitude": "#b4befe",
                 "velocity": "#f9e2af",
-                "drag": "#fab387",
-                "term_velocity": "#f38ba8"
+                "acceleration": "#fab387",
+                "drag": "#f38ba8"
             },
             "data": {
                 "altitude": {
@@ -37,13 +37,13 @@ class Logger:
                     "time": get_time(self.START_TIME),
                     "velocity": rocket.velocity.y
                 },
+                "acceleration": {
+                    "time": get_time(self.START_TIME),
+                    "acceleration": rocket.acceleration.y
+                },
                 "drag": {
                     "time": get_time(self.START_TIME),
                     "drag": rocket.drag.y
-                },
-                "term_velocity": {
-                    "time": get_time(self.START_TIME),
-                    "term_velocity": rocket.term_velocity
                 }
             }
         }

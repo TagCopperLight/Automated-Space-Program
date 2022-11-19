@@ -1,3 +1,5 @@
+from pygame import Vector2
+
 from classes.entity.parts.Part import Part
 
 
@@ -9,7 +11,7 @@ class FuelTank(Part):
         self.sprite = 'data/parts/fuel_tank.png'
 
         self.mass = 5018
-        self.size = (4, 12)
+        self.size = Vector2(4, 12)
 
         self.drag_type = "long cylinder"
 
