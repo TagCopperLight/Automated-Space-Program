@@ -39,6 +39,8 @@ class Rocket(Entity):
         self.temperature = 0
         self.density = 0
 
+        self.torque = Vector2()
+
         self.terminal_velocity = 0
     
     def update(self, events):
@@ -100,7 +102,11 @@ class Rocket(Entity):
         self.check_position()
 
     def update_rotations(self, dt):
-        pass
+        self.angular_acceleration = self.parts_manager.get_total_angular_acceleration()
+
+        self.angular_velocity += self.angular_acceleration * dt
+
+        print(self.angular_velocity)
     
     def set_thrust(self, thrust):
         self.thrust = max(min(thrust, 1), 0)

@@ -13,6 +13,8 @@ class FuelTank(Part):
         self.mass = 5018
         self.size = Vector2(4, 12)
 
+        self.moment_of_inertia = 1/12 * self.mass * (3 * (self.size.x / 2) ** 2 + self.size.y ** 2)
+
         self.drag_type = "long cylinder"
 
         self.fuel_mass = 120000

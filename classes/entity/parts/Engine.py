@@ -12,6 +12,8 @@ class Engine(Part):
 
         self.mass = 4410
         self.size = Vector2(4, 4)
+        
+        self.moment_of_inertia = 1/12 * self.mass * (3 * (self.size.x / 2) ** 2 + self.size.y ** 2)
 
         self.drag_type = "cube"
 
