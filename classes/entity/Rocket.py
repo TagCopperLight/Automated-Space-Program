@@ -52,7 +52,7 @@ class Rocket(Entity):
 
         self.update_translations(dt)
 
-        self.update_rotations(dt)
+        #self.update_rotations(dt)
 
         self.set_fuel(dt)
     

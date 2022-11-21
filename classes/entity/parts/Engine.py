@@ -20,12 +20,11 @@ class Engine(Part):
         self.max_thrust = Vector2(0, 7600000)
         self.fuel_consumption = 2500
     
-    def get_application_points(self, rotation):
-        return [
+    def get_application_points(self, rotation, velocity):
+        possible_points = [
             self.position.copy(),
             Vector2(self.position.x + self.size.x / 2, self.position.y + self.size.y / 2),
             Vector2(self.position.x - self.size.x / 2, self.position.y + self.size.y / 2),
-            Vector2(self.position.x + self.size.x, self.position.y),
                 ]
     
     def get_applied_force(self, application_point, velocity, density):

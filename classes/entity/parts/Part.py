@@ -14,7 +14,7 @@ class Part(Entity):
     def get_sprite(self):
         return self.sprite
     
-    def get_application_points(self):
+    def get_application_points(self, rotation, velocity):
         return []
     
     def get_applied_force(self, application_point, velocity, density):

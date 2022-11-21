@@ -24,7 +24,7 @@ class DisplayManager:
 
         for entity in entities:
             if entity.name == 'Rocket':
-                rotated_rocket = transform.rotate(entity.rocket, entity.rotation.angle_to(Vector2(0, 1)))
+                rotated_rocket = transform.rotate(entity.parts_manager.get_full_sprite(), entity.rotation.angle_to(Vector2(0, 1)))
 
                 pos_to_show = convert_position(entity, screen_size, rotated_rocket)
 
