@@ -87,8 +87,8 @@ class PartsManager:
         moment_of_inertia = self.get_total_moment_of_inertia()
 
         for part in self.parts:
-            for application_point in part.get_application_points(rotation, velocity):
-                applied_force = part.get_applied_force(application_point, velocity, rotation, density)
+            for application_point in part.get_application_points(velocity, rotation):
+                applied_force = part.get_applied_force(application_point, velocity, density)
 
                 moment_arm = application_point - center_of_mass
 

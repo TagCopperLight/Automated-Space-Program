@@ -23,7 +23,7 @@ class Rocket(Entity):
         self.center_of_mass = self.parts_manager.get_center_of_mass()
 
         self.max_thrust = self.parts_manager.get_total_thrust()
-        self.thrust = 0
+        self.thrust = 1
 
         self.drag = Vector2()
         self.clock = Clock()
@@ -52,7 +52,7 @@ class Rocket(Entity):
 
         self.update_translations(dt)
 
-        #self.update_rotations(dt)
+        self.update_rotations(dt)
 
         self.set_fuel(dt)
     
@@ -63,9 +63,11 @@ class Rocket(Entity):
             elif event == K_s:
                 self.set_thrust(self.thrust - 0.1)
             elif event == K_q:
-                self.max_thrust.rotate_ip_rad(-pi/12)
+                # self.max_thrust.rotate_ip_rad(-pi/12)
+                self.rotation.rotate_ip_rad(-pi/12)
             elif event == K_d:
-                self.max_thrust.rotate_ip_rad(pi/12)
+                # self.max_thrust.rotate_ip_rad(pi/12)
+                self.rotation.rotate_ip_rad(pi/12)
     
     def check_fuel(self):
         if self.fuel <= 0:
@@ -104,7 +106,7 @@ class Rocket(Entity):
 
         self.angular_velocity += self.angular_acceleration * dt
 
-        print(self.angular_velocity)
+        #print(self.angular_velocity)
     
     def set_thrust(self, thrust):
         self.thrust = max(min(thrust, 1), 0)
