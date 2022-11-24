@@ -1,19 +1,24 @@
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from classes.entity.Rocket import Rocket
+
 from time import time_ns
+from socket import socket, AF_INET, SOCK_STREAM
+from json import dumps
+
 from utils.utils import get_time
 
-import socket
-import json
 
 
 class Logger:
-    def __init__(self):
+    def __init__(self) -> None:
         self.START_TIME = time_ns()
 
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock = socket(AF_INET, SOCK_STREAM)
         self.sock.connect(('127.0.0.1', 4000))
-        self.sock.sendall((json.dumps({"type": "reset"}) + 'eof').encode('utf-8'))
+        self.sock.sendall((dumps({"type": "reset"}) + 'eof').encode('utf-8'))
     
-    def send_data_tcp(self, rocket):
+    def send_data_tcp(self, rocket : 'Rocket') -> None:
         data = {
             "type": "data",
             "data_type": [
@@ -47,4 +52,4 @@ class Logger:
                 }
             }
         }
-        self.sock.sendall((json.dumps(data) + 'eof').encode('utf-8'))
+        self.sock.sendall((dumps(data) + 'eof').encode('utf-8'))

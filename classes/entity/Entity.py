@@ -1,7 +1,9 @@
 from pygame import Vector2
 
+from classes.Event import Event
+
 class Entity:
-    def __init__(self):
+    def __init__(self) -> None:
         self.name = ""
 
         self.position = Vector2()
@@ -14,3 +16,6 @@ class Entity:
 
         self.mass = 0
         self.center_of_mass = Vector2()
+    
+    def update(self, events : Event) -> None:
+        pass

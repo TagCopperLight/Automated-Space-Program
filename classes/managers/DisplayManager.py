@@ -1,15 +1,17 @@
 from pygame import font, Surface, Rect, draw, SRCALPHA, Vector2, transform
 
+from classes.entity.Entity import Entity
+
 from utils.colors import Colors
 from utils.utils import convert_position
 
 
 class DisplayManager:
-    def __init__(self, debug=False):
+    def __init__(self, debug : bool = False) -> None:
         self.debug = debug
         self.FONT = font.Font('data/Roboto-Bold.ttf', 20)
 
-    def update(self, screen_size, entities):
+    def update(self, screen_size : tuple[int, int], entities : list[Entity]) -> Surface:
         surface = Surface(screen_size, SRCALPHA)
 
         surface.fill(Colors.SKY.value)
@@ -32,9 +34,9 @@ class DisplayManager:
                 
         return surface
     
-    def draw_debug(self, surface, entity):
+    def draw_debug(self, surface : Surface, entity : Entity) -> None:
         surface.blit(self.FONT.render(f'Velocity : {entity.velocity.y:.3f} m/s', True, Colors.BLACK.value), (10, 10))
         surface.blit(self.FONT.render(f'Altitude : {entity.position.y:.3f} m', True, Colors.BLACK.value), (10, 40))
-        surface.blit(self.FONT.render(f'Terminal velocity : {entity.terminal_velocity:.3f} m/s', True, Colors.BLACK.value), (10, 70))
-        surface.blit(self.FONT.render(f'Thrust : {entity.thrust * 100:.3f} %', True, Colors.BLACK.value), (10, 100))
-        surface.blit(self.FONT.render(f'Fuel : {entity.fuel / entity.fuel_mass * 100:.3f} %', True, Colors.BLACK.value), (10, 130))
+        surface.blit(self.FONT.render(f'Terminal velocity : {entity.terminal_velocity:.3f} m/s', True, Colors.BLACK.value), (10, 70)) #type: ignore
+        surface.blit(self.FONT.render(f'Thrust : {entity.thrust * 100:.3f} %', True, Colors.BLACK.value), (10, 100)) #type: ignore
+        surface.blit(self.FONT.render(f'Fuel : {entity.fuel / entity.fuel_mass * 100:.3f} %', True, Colors.BLACK.value), (10, 130)) #type: ignore

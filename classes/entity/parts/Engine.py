@@ -4,7 +4,7 @@ from classes.entity.parts.Part import Part
 
 
 class Engine(Part):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         self.name = "Engine"
@@ -13,7 +13,12 @@ class Engine(Part):
         self.mass = 4410
         self.size = Vector2(4, 4)
 
-        self.starting_points = [self.position + Vector2(0, self.size.y / 2), self.position + self.size / 2, self.position + Vector2(-self.size.x / 2, self.size.y / 2)]
+        self.starting_points = [
+            self.position,
+            self.position + self.size / 2,
+            self.position + Vector2(0, self.size.y),
+            self.position + Vector2(-self.size.x / 2, self.size.y / 2)
+            ]
         self.faces = [
             [self.position + Vector2(-self.size.x / 2, 0), self.position + Vector2(self.size.x / 2, 0), self.position],
             [self.position + Vector2(self.size.x / 2, 0), self.position + Vector2(self.size.x / 2, self.size.y), self.position + self.size / 2],
@@ -27,6 +32,3 @@ class Engine(Part):
 
         self.max_thrust = Vector2(0, 7600000)
         self.fuel_consumption = 2500
-    
-    def get_applied_force(self, application_point, velocity, density):
-        return Vector2()

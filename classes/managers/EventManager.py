@@ -1,22 +1,18 @@
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from client import Client
+
 import pygame
 
-
-class Event:
-    def __init__(self):
-        self.closed = False
-
-        self.keys_down = []
-        
-        self.keys_up = []
-
+from classes.Event import Event
 
 class EventManager:
-    def update(self, events, client):
+    def update(self, events : list[pygame.event.Event], client : 'Client') -> Event:
         returned_event = Event()
 
         for event in events:
             if event.type == pygame.QUIT:
-                    client._run = False
+                    client.running = False
             if event.type == pygame.KEYDOWN:
                 returned_event.keys_down.append(event.key)
             if event.type == pygame.KEYUP:

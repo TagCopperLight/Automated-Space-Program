@@ -3,6 +3,8 @@ from math import sqrt, pi
 
 from classes.entity.Entity import Entity
 from classes.managers.PartsManager import PartsManager
+from classes.entity.parts.Part import Part
+from classes.Event import Event
 
 from utils.utils import Clock
 from utils.physics import get_temperature, get_density, get_gravity_acceleration
@@ -10,7 +12,7 @@ from utils.constants import Constants
 
 
 class Rocket(Entity):
-    def __init__(self, parts):
+    def __init__(self, parts : list[Part]) -> None:
         super().__init__()
 
         self.name = "Rocket"
@@ -26,7 +28,7 @@ class Rocket(Entity):
         self.thrust = 1
 
         self.drag = Vector2()
-        self.clock = Clock()
+        self.clock : Clock = Clock()
 
         self.rocket_mass = self.parts_manager.get_total_rocket_mass()
         self.fuel_mass = self.parts_manager.get_total_fuel_mass()
@@ -41,7 +43,7 @@ class Rocket(Entity):
 
         self.terminal_velocity = 0
     
-    def update(self, events):
+    def update(self, events : Event) -> None:
         dt = self.clock.tick() / 1_000_000_000
 
         self.update_from_player(events)
@@ -56,7 +58,7 @@ class Rocket(Entity):
 
         self.set_fuel(dt)
     
-    def update_from_player(self, events):
+    def update_from_player(self, events : Event) -> None:
         for event in events.keys_down:
             if event == K_z:
                 self.set_thrust(self.thrust + 0.1)
@@ -69,17 +71,17 @@ class Rocket(Entity):
                 # self.max_thrust.rotate_ip_rad(pi/12)
                 self.rotation.rotate_ip_rad(pi/12)
     
-    def check_fuel(self):
+    def check_fuel(self) -> None:
         if self.fuel <= 0:
             self.thrust = 0
             self.fuel = 0
     
-    def check_position(self):
+    def check_position(self) -> None:
         if self.position.y <= 60:
             self.position.y = 60
             self.velocity = Vector2()
     
-    def update_physics(self):
+    def update_physics(self) -> None:
         self.gravity = Vector2(0, -get_gravity_acceleration(self.position.y))
         self.temperature = get_temperature(self.position.y)
         self.density = get_density(self.position.y)
@@ -89,7 +91,7 @@ class Rocket(Entity):
         self.terminal_velocity = sqrt((2 * self.mass * -self.gravity.y) / (self.density * 0.42 * 0.25)) if self.density != 0 else 0
         self.drag = Vector2() if self.velocity == Vector2() else -self.velocity.normalize() * (1/2 * self.density * self.velocity.magnitude_squared() * 0.42 * 0.25)
 
-    def update_translations(self, dt):
+    def update_translations(self, dt : float) -> None:
         self.acceleration = Vector2()
 
         self.acceleration += (self.gravity * self.mass) + self.drag + (self.max_thrust * self.thrust)
@@ -101,15 +103,15 @@ class Rocket(Entity):
 
         self.check_position()
 
-    def update_rotations(self, dt):
+    def update_rotations(self, dt : float) -> None:
         self.angular_acceleration = self.parts_manager.get_total_angular_acceleration(self.velocity, self.density, self.rotation)
 
         self.angular_velocity += self.angular_acceleration * dt
 
         #print(self.angular_velocity)
     
-    def set_thrust(self, thrust):
+    def set_thrust(self, thrust : float) -> None:
         self.thrust = max(min(thrust, 1), 0)
 
-    def set_fuel(self, dt):
+    def set_fuel(self, dt : float) -> None:
         self.fuel -= self.fuel_consumption * self.thrust * dt

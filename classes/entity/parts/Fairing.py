@@ -4,7 +4,7 @@ from classes.entity.parts.Part import Part
 
 
 class Fairing(Part):
-    def __init__(self):
+    def __init__(self ) -> None:
         super().__init__()
 
         self.name = "Fairing"

@@ -1,16 +1,21 @@
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from classes.entity.Entity import Entity
+
 from time import time_ns, perf_counter
-from pygame import Vector2
+from pygame import Vector2, surface, math
 
 
-def convert_position(rocket, screen_size, rotated_rocket):
-    return screen_size[0] / 2 - rotated_rocket.get_width() / 2, screen_size[1] - rotated_rocket.get_height() - rocket.position.y
+
+def convert_position(rocket : 'Entity', screen_size : tuple[int, int], rotated_rocket : surface.Surface) -> Vector2:
+    return Vector2(screen_size[0] / 2 - rotated_rocket.get_width() / 2, screen_size[1] - rotated_rocket.get_height() - rocket.position.y)
 
 
-def get_time(start_time=0):
+def get_time(start_time : float = 0) -> float:
     return (time_ns() - start_time) / 1_000_000_000
 
 
-def _sleep(duration):
+def _sleep(duration : float) -> None:
     now = perf_counter()
     end = now + duration
     while now < end:
@@ -18,12 +23,12 @@ def _sleep(duration):
 
 
 class Clock:
-    def __init__(self, fps=60):
+    def __init__(self, fps : int = 60) -> None:
         self.START_TIME = time_ns()
         self.start_time = time_ns()
         self.FPS = fps
 
-    def sleep(self):
+    def sleep(self) -> None:
         elapsed = time_ns() - self.start_time
         waiting_time = (1_000_000_000 / self.FPS) - elapsed
         if waiting_time > 0:
@@ -31,7 +36,7 @@ class Clock:
         
         self.start_time = time_ns()
 
-    def tick(self):
+    def tick(self) -> float:
         now = time_ns()
         delta_t = now - self.start_time
         self.start_time = now
@@ -39,7 +44,7 @@ class Clock:
         return delta_t
 
 
-def intersect_line_line(l1_start, l1_end, l2_start, l2_end):
+def intersect_line_line(l1_start : math.Vector2, l1_end : math.Vector2, l2_start : math.Vector2, l2_end : math.Vector2) -> bool:
     if ((l1_start.x == l1_end.x and l1_start.y == l1_end.y) or (l2_start.x == l2_end.x and l2_start.y == l2_end.y)):
         return False
 
