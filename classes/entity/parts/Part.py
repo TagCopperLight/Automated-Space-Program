@@ -42,5 +42,15 @@ class Part(Entity):
         return application_points
     
     def get_applied_force(self, application_point : math.Vector2, velocity : Vector2, rotation : Vector2, density : float) -> Vector2:
+        current_face : list[math.Vector2] = []
+        for face in self.faces:
+            if face[2] == application_point:
+                current_face.append(face[0])
+                current_face.append(face[1])
+
+                break
+
+        
+        #exit()
 
         return Vector2()

@@ -25,7 +25,7 @@ class Client:
 
         self._displayManager = DisplayManager(debug=True)
         self._eventManager = EventManager()
-        self._logger = Logger()
+        self._logger = Logger(activate=True)
 
         self._entities : list[Entity] = [Rocket([Engine(), FuelTank(), FuelTank(), FuelTank(), FuelTank(), Fairing()])]
 

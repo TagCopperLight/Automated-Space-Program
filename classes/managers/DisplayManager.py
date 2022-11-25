@@ -26,9 +26,10 @@ class DisplayManager:
 
         for entity in entities:
             if entity.name == 'Rocket':
-                rotated_rocket = transform.rotate(entity.parts_manager.get_full_sprite(), entity.rotation.angle_to(Vector2(0, 1)))
+                rocket_image : Surface = entity.parts_manager.get_full_sprite() #type: ignore
+                rotated_rocket = transform.rotate(rocket_image, entity.rotation.angle_to(Vector2(0, 1)))
 
-                pos_to_show = convert_position(entity, screen_size, rotated_rocket)
+                pos_to_show = convert_position(entity, screen_size, rocket_image,rotated_rocket)
 
                 surface.blit(rotated_rocket, pos_to_show)
                 

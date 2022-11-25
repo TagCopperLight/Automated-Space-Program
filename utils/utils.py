@@ -7,8 +7,8 @@ from pygame import Vector2, surface, math
 
 
 
-def convert_position(rocket : 'Entity', screen_size : tuple[int, int], rotated_rocket : surface.Surface) -> Vector2:
-    return Vector2(screen_size[0] / 2 - rotated_rocket.get_width() / 2, screen_size[1] - rotated_rocket.get_height() - rocket.position.y)
+def convert_position(rocket : 'Entity', screen_size : tuple[int, int], rocket_image : surface.Surface, rotated_rocket : surface.Surface) -> Vector2:
+    return Vector2(screen_size[0] / 2 - rotated_rocket.get_width() / 2, screen_size[1] - rocket_image.get_height() / 2 - rotated_rocket.get_height() / 2 - rocket.position.y)
 
 
 def get_time(start_time : float = 0) -> float:

@@ -11,14 +11,18 @@ from utils.utils import get_time
 
 
 class Logger:
-    def __init__(self) -> None:
+    def __init__(self, activate : bool = True) -> None:
         self.START_TIME = time_ns()
+        self.activate = activate
 
-        self.sock = socket(AF_INET, SOCK_STREAM)
-        self.sock.connect(('127.0.0.1', 4000))
-        self.sock.sendall((dumps({"type": "reset"}) + 'eof').encode('utf-8'))
+        if activate:
+            self.sock = socket(AF_INET, SOCK_STREAM)
+            self.sock.connect(('127.0.0.1', 4000))
+            self.sock.sendall((dumps({"type": "reset"}) + 'eof').encode('utf-8'))
     
     def send_data_tcp(self, rocket : 'Rocket') -> None:
+        if not self.activate:
+            return None
         data = {
             "type": "data",
             "data_type": [
