@@ -22,7 +22,7 @@ class Engine(Part):
         self.faces = [
             [self.position + Vector2(-self.size.x / 2, 0), self.position + Vector2(self.size.x / 2, 0), self.position],
             [self.position + Vector2(self.size.x / 2, 0), self.position + Vector2(self.size.x / 2, self.size.y), self.position + self.size / 2],
-            [self.position + Vector2(self.size.x / 2, self.size.y), self.position + Vector2(-self.size.x / 2, self.size.y), self.position + Vector2(0, self.size.y)],
+            #[self.position + Vector2(self.size.x / 2, self.size.y), self.position + Vector2(-self.size.x / 2, self.size.y), self.position + Vector2(0, self.size.y)],
             [self.position + Vector2(-self.size.x / 2, self.size.y), self.position + Vector2(-self.size.x / 2, 0), self.position + Vector2(-self.size.x / 2, self.size.y / 2)]
             ]
         

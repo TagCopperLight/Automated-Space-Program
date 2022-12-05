@@ -25,24 +25,29 @@ class Client:
 
         self._displayManager = DisplayManager(debug=True)
         self._eventManager = EventManager()
-        self._logger = Logger(activate=True)
+        self._logger = Logger(activate=False)
 
-        self._entities : list[Entity] = [Rocket([Engine(), FuelTank(), FuelTank(), FuelTank(), FuelTank(), Fairing()])]
+        self._entities : list[Entity] = [Rocket([Engine(), FuelTank(), FuelTank(), FuelTank(), FuelTank(), Fairing()], self._displayManager)]
 
         self._fps = fps
         self.clock = Clock(self._fps)
 
+        self.pause = False
+
     def run(self) -> None:
         while self.running:
             self._screen.blit(self.tick(), (0, 0))
-
-            pygame.display.update()
+            if not self.pause:
+                pygame.display.update()
 
     def tick(self) -> pygame.Surface:
         events = self._eventManager.update(pygame.event.get(), self)
 
         for entity in self._entities:
             entity.update(events)
+        
+        if 112 in events.keys_down:
+            self.pause = not self.pause
         
         for entity in self._entities:
             if entity.name == 'Rocket':

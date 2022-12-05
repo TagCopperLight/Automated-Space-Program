@@ -1,11 +1,13 @@
 from pygame import Vector2, math, image, transform, Surface, SRCALPHA
 
 from classes.entity.parts.Part import Part
+from classes.managers.DisplayManager import DisplayManager
 
 
 class PartsManager:
-    def __init__(self, parts : list[Part]) -> None:
+    def __init__(self, parts : list[Part], display_manager : DisplayManager) -> None:
         self.parts = parts
+        self.display_manager = display_manager
     
     def get_total_rocket_mass(self) -> float:
         total_mass = 0
@@ -44,7 +46,7 @@ class PartsManager:
 
 # ------------------------------- Sprites ------------------------------- #
 
-    def get_full_sprite(self, n : int = 2) -> Surface:
+    def get_full_sprite(self, n : int = 4) -> Surface:
         full_sprite_surface = Surface((0, 0), SRCALPHA)
         for part in self.parts:
             sprite = transform.scale(image.load(part.sprite), part.size * n)
@@ -83,10 +85,11 @@ class PartsManager:
 
         return center_of_mass
     
-    def get_total_angular_acceleration(self, velocity : Vector2, density : float, rotation : Vector2) -> math.Vector2:
+    def get_total_angular_acceleration(self, position : Vector2, velocity : Vector2, density : float, rotation : Vector2) -> math.Vector2:
         total_angular_acceleration = Vector2()
         center_of_mass = self.get_center_of_mass()
         moment_of_inertia = self.get_total_moment_of_inertia()
+        total_vectors = 1
 
         for part in self.parts:
             for application_point in part.get_application_points(velocity, rotation):
@@ -99,9 +102,12 @@ class PartsManager:
 
                 torque = angular_force * moment_arm.length()
 
-                total_angular_acceleration += torque / moment_of_inertia
+                self.display_manager.debug_vectors.append((torque / moment_of_inertia, part.position + position, (255, 0, 0)))
 
-        return total_angular_acceleration
+                total_angular_acceleration += torque
+                total_vectors += 1
+
+        return total_angular_acceleration / moment_of_inertia / total_vectors
 
 
 

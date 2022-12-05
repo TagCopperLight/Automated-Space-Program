@@ -13,9 +13,14 @@ class Fairing(Part):
         self.mass = 5018
         self.size = Vector2(4, 12)
 
-        self.starting_points = [self.position + Vector2(0, self.size.y / 2), self.position + self.size / 2, self.position + Vector2(-self.size.x / 2, self.size.y / 2)]
+        self.starting_points = [
+            self.position,
+            self.position + self.size / 2,
+            self.position + Vector2(0, self.size.y),
+            self.position + Vector2(-self.size.x / 2, self.size.y / 2)
+            ]
         self.faces = [
-            [self.position + Vector2(-self.size.x / 2, 0), self.position + Vector2(self.size.x / 2, 0), self.position],
+            #[self.position + Vector2(-self.size.x / 2, 0), self.position + Vector2(self.size.x / 2, 0), self.position],
             [self.position + Vector2(self.size.x / 2, 0), self.position + Vector2(self.size.x / 2, self.size.y), self.position + self.size / 2],
             [self.position + Vector2(self.size.x / 2, self.size.y), self.position + Vector2(-self.size.x / 2, self.size.y), self.position + Vector2(0, self.size.y)],
             [self.position + Vector2(-self.size.x / 2, self.size.y), self.position + Vector2(-self.size.x / 2, 0), self.position + Vector2(-self.size.x / 2, self.size.y / 2)]

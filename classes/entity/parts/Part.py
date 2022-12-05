@@ -41,16 +41,18 @@ class Part(Entity):
         
         return application_points
     
-    def get_applied_force(self, application_point : math.Vector2, velocity : Vector2, rotation : Vector2, density : float) -> Vector2:
-        current_face : list[math.Vector2] = []
+    def get_applied_force(self, application_point : math.Vector2, velocity : Vector2, rotation : Vector2, density : float) -> math.Vector2:
+        drag = Vector2()
         for face in self.faces:
             if face[2] == application_point:
-                current_face.append(face[0])
-                current_face.append(face[1])
+                rotated_velocity = velocity.rotate(Vector2(0, 1).angle_to(rotation))
+                ortho_rotated_velocity = rotated_velocity.rotate(90)
+                ortho_rotated_velocity.scale_to_length(2 * self.size.x)
+
+                surface : float = (face[0] - face[1]).project(ortho_rotated_velocity).length() #type: ignore
+                
+                drag = Vector2() if velocity == Vector2() else -velocity.normalize() * (1/2 * density * velocity.magnitude_squared() * surface * 2)
 
                 break
 
-        
-        #exit()
-
-        return Vector2()
+        return drag

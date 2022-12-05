@@ -1,4 +1,4 @@
-from pygame import font, Surface, Rect, draw, SRCALPHA, Vector2, transform
+from pygame import font, Surface, Rect, draw, SRCALPHA, Vector2, transform, math
 
 from classes.entity.Entity import Entity
 
@@ -10,6 +10,7 @@ class DisplayManager:
     def __init__(self, debug : bool = False) -> None:
         self.debug = debug
         self.FONT = font.Font('data/Roboto-Bold.ttf', 20)
+        self.debug_vectors: list[tuple[math.Vector2, math.Vector2, tuple[int, int, int]]] = []
 
     def update(self, screen_size : tuple[int, int], entities : list[Entity]) -> Surface:
         surface = Surface(screen_size, SRCALPHA)
@@ -28,10 +29,15 @@ class DisplayManager:
             if entity.name == 'Rocket':
                 rocket_image : Surface = entity.parts_manager.get_full_sprite() #type: ignore
                 rotated_rocket = transform.rotate(rocket_image, entity.rotation.angle_to(Vector2(0, 1)))
-
-                pos_to_show = convert_position(entity, screen_size, rocket_image,rotated_rocket)
+                pos_to_show = convert_position(entity.position, screen_size, rocket_image, rotated_rocket)
 
                 surface.blit(rotated_rocket, pos_to_show)
+                s = Surface((0, rocket_image.get_height() / 2))
+
+                for vector in self.debug_vectors:
+                    self.draw_vector(surface, -vector[0], vector[2], convert_position(Vector2(vector[1].x, vector[1].y), screen_size, s, s))
+                
+                self.debug_vectors = []
                 
         return surface
     
@@ -41,3 +47,6 @@ class DisplayManager:
         surface.blit(self.FONT.render(f'Terminal velocity : {entity.terminal_velocity:.3f} m/s', True, Colors.BLACK.value), (10, 70)) #type: ignore
         surface.blit(self.FONT.render(f'Thrust : {entity.thrust * 100:.3f} %', True, Colors.BLACK.value), (10, 100)) #type: ignore
         surface.blit(self.FONT.render(f'Fuel : {entity.fuel / entity.fuel_mass * 100:.3f} %', True, Colors.BLACK.value), (10, 130)) #type: ignore
+
+    def draw_vector(self, surface : Surface, vector : math.Vector2, color : tuple[int, int, int], position : math.Vector2) -> None:
+        draw.line(surface, color, position, position + vector, 3)

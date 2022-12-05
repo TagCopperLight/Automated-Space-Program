@@ -1,14 +1,10 @@
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from classes.entity.Entity import Entity
-
 from time import time_ns, perf_counter
 from pygame import Vector2, surface, math
 
 
 
-def convert_position(rocket : 'Entity', screen_size : tuple[int, int], rocket_image : surface.Surface, rotated_rocket : surface.Surface) -> Vector2:
-    return Vector2(screen_size[0] / 2 - rotated_rocket.get_width() / 2, screen_size[1] - rocket_image.get_height() / 2 - rotated_rocket.get_height() / 2 - rocket.position.y)
+def convert_position(position : Vector2, screen_size : tuple[int, int], rocket_image : surface.Surface, rotated_rocket : surface.Surface) -> Vector2:
+    return Vector2(screen_size[0] / 2 - rotated_rocket.get_width() / 2 - position.x, screen_size[1] - rocket_image.get_height() / 2 - rotated_rocket.get_height() / 2 - position.y)
 
 
 def get_time(start_time : float = 0) -> float:
