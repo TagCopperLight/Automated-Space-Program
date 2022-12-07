@@ -44,7 +44,7 @@ class Rocket(Entity):
         self.density = 0
 
         self.terminal_velocity = 0
-    
+
     def update(self, events : Event) -> None:
         dt = self.clock.tick() / 1_000_000_000
 
@@ -107,7 +107,7 @@ class Rocket(Entity):
 
     def update_rotations(self, dt : float) -> None:
         self.angular_acceleration = self.parts_manager.get_total_angular_acceleration(self.position, self.velocity, self.density, self.rotation)
-        self.display_manager.debug_vectors.append((self.angular_acceleration, self.position, (0, 0, 0)))
+        self.display_manager.debug_vectors.append((self.angular_acceleration * 10, self.position, (0, 0, 0)))
 
         self.angular_velocity += self.angular_acceleration * dt
 

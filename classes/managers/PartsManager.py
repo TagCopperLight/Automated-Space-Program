@@ -46,7 +46,7 @@ class PartsManager:
 
 # ------------------------------- Sprites ------------------------------- #
 
-    def get_full_sprite(self, n : int = 4) -> Surface:
+    def get_full_sprite(self, n : int = 1) -> Surface:
         full_sprite_surface = Surface((0, 0), SRCALPHA)
         for part in self.parts:
             sprite = transform.scale(image.load(part.sprite), part.size * n)
@@ -102,12 +102,9 @@ class PartsManager:
 
                 torque = angular_force * moment_arm.length()
 
-                self.display_manager.debug_vectors.append((torque / moment_of_inertia, part.position + position, (255, 0, 0)))
+                self.display_manager.debug_vectors.append((torque / moment_of_inertia * 10, part.position + position + Vector2(0, -32), (255, 0, 0)))
 
                 total_angular_acceleration += torque
                 total_vectors += 1
 
         return total_angular_acceleration / moment_of_inertia / total_vectors
-
-
-
