@@ -1,6 +1,7 @@
 from pygame import font, Surface, Rect, draw, SRCALPHA, Vector2, transform, math
 
 from classes.entity.Entity import Entity
+from classes.managers.ParticlesManager import ParticlesManager
 
 from utils.colors import Colors
 from utils.utils import convert_position
@@ -11,6 +12,8 @@ class DisplayManager:
         self.debug = debug
         self.FONT = font.Font('data/Roboto-Bold.ttf', 20)
         self.debug_vectors: list[tuple[math.Vector2, math.Vector2, tuple[int, int, int]]] = []
+
+        self.particles_manager = ParticlesManager()
 
     def update(self, screen_size : tuple[int, int], entities : list[Entity]) -> Surface:
         surface = Surface(screen_size, SRCALPHA)
@@ -30,14 +33,20 @@ class DisplayManager:
                 rocket_image : Surface = entity.parts_manager.get_full_sprite() #type: ignore
                 rotated_rocket = transform.rotate(rocket_image, entity.rotation.angle_to(Vector2(0, 1)))
                 pos_to_show = convert_position(entity.position, screen_size, rocket_image, rotated_rocket)
+                
+                s = Surface((0, rocket_image.get_height() / 2))
+                
+                self.particles_manager.emit_fire(10)
+                particle_surface = self.particles_manager.render(1/60)
+                surface.blit(particle_surface, convert_position(entity.position + Vector2(0, -32) + Vector2(100, 100), screen_size, s, s))
 
                 surface.blit(rotated_rocket, pos_to_show)
-                s = Surface((0, rocket_image.get_height() / 2))
 
                 for vector in self.debug_vectors:
                     self.draw_vector(surface, -vector[0], vector[2], convert_position(Vector2(vector[1].x, vector[1].y), screen_size, s, s))
                 
                 self.debug_vectors = []
+
                 
         return surface
     
