@@ -38,7 +38,7 @@ class DisplayManager:
                 
                 self.particles_manager.emit_fire(10)
                 particle_surface = self.particles_manager.render(1/60)
-                surface.blit(particle_surface, convert_position(entity.position + Vector2(0, -32) + Vector2(100, 100), screen_size, s, s))
+                surface.blit(particle_surface, convert_position(entity.position + Vector2(0, -32) + Vector2(100, 100), screen_size, s, s)) #type: ignore
 
                 surface.blit(rotated_rocket, pos_to_show)
 
